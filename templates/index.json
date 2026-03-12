@@ -92,6 +92,37 @@
     },
     "best_sellers_8GXV3X": {
       "type": "best-sellers",
+      "blocks": {
+        "collection_PHLqdH": {
+          "type": "collection",
+          "settings": {
+            "collection": "tools",
+            "collection_title": "",
+            "featured_product": ""
+          }
+        },
+        "collection_paXa7G": {
+          "type": "collection",
+          "settings": {
+            "collection": "bikes",
+            "collection_title": "Best Bikes",
+            "featured_product": ""
+          }
+        },
+        "collection_kH8Wdb": {
+          "type": "collection",
+          "settings": {
+            "collection": "bicycle-seat",
+            "collection_title": "",
+            "featured_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_PHLqdH",
+        "collection_paXa7G",
+        "collection_kH8Wdb"
+      ],
       "name": "Best Sellers",
       "settings": {
         "section_label": "Best Sellers",
