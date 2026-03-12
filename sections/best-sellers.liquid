@@ -1,31 +1,404 @@
+{% assign section_data = section.settings %}
+{% assign section_data = section.id %}
 
-{% for block in section.blocks %}
-  {% if block.type == 'collection' %}
-    {% assign collection = block.settings.collection %}
-    {% assign custom_title = block.settings.collection_title %}
-    {% assign featured_product = block.settings.featured_product %}
+<div class="section" id="{{ section.id }}">
+    <div class="bs-section_container">
+        <div class="bs-section_content">
+            <span class="bs-section_label">{{ section_data.section_label }}</span>
+            <div class="bs-section_title"><h2>{{ section_data.section_title }}</h2></div>
 
-    <div class="collection-block">
+            <div class="bs-collection bs-tabs" {{ block.shopify_attributes }}>
+                {% for block in section.blocks %}
+                    {% if block.type == 'collection' %}
+                        {% assign collection = block.settings.collection %}
+                        {% assign custom_title = block.settings.collection_title %}
+                        {% assign featured_product = block.settings.featured_product %}
 
-      <h2>
-        {% if custom_title != blank %}
-          {{ custom_title }}
-        {% else %}
-          {{ collection.title }}
-        {% endif %}
-      </h2>
+                        <div class="bs-collection_item bs-tab_item {% if forloop.first %}active{% endif %}">
+                              <span>
+                                  {% if custom_title != blank %}
+                                      {{ custom_title }}
+                                  {% else %}
+                                      {{ collection.title }}
+                                  {% endif %}
+                              </span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.43 5.93005L20.5 12.0001L14.43 18.0701" stroke="currentColor"
+                                      stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M3.5 12H20.33" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
+        <div class="bs-products bs-tabs_content">
+            {% for block in section.blocks %}
+                {% if block.type == 'collection' %}
+                    {% assign collection = block.settings.collection %}
+                    {% assign custom_title = block.settings.collection_title %}
+                    {% assign featured_product = block.settings.featured_product %}
 
-      {% if featured_product and collection.products contains featured_product %}
+                    <div class="bs-product bs-tab_content {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
+                        {% assign product = collection.products.first %}
 
-        {% render 'product-card', product: featured_product %}
-      {% elsif collection.products.size > 0 %}
+                        {% if featured_product != blank and collection.products contains featured_product %}
+                            {% assign product = featured_product %}
+                        {% endif %}
 
-        {% render 'product-card', product: collection.products.first %}
-      {% endif %}
+                        {% if product.tags.size > 0 %}
+                            <div class="bs-product_tags">
+                                {% for tag in product.tags limit: 6 %}
+                                    <span class="bs-product_tag {% if tag == "Sale" %}sale{% endif %}">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="bs-product_btns">
+                            <button type="button" class="bs-product_btn-icon wish-list"
+                                    data-product-id="{{ product.id }}">
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20.84 4.61012C20.3292 4.09912 19.7228 3.69376 19.0554 3.4172C18.3879 3.14064 17.6725 2.99829 16.95 2.99829C16.2275 2.99829 15.5121 3.14064 14.8446 3.4172C14.1772 3.69376 13.5708 4.09912 13.06 4.61012L12 5.67012L10.94 4.61012C9.90831 3.57842 8.50903 2.99883 7.05 2.99883C5.59096 2.99883 4.19169 3.57842 3.16 4.61012C2.1283 5.64181 1.54871 7.04108 1.54871 8.50012C1.54871 9.95915 2.1283 11.3584 3.16 12.3901L4.22 13.4501L12 21.2301L19.78 13.4501L20.84 12.3901C21.351 11.8794 21.7564 11.2729 22.0329 10.6055C22.3095 9.93801 22.4518 9.2226 22.4518 8.50012C22.4518 7.77763 22.3095 7.06222 22.0329 6.39476C21.7564 5.7273 21.351 5.12087 20.84 4.61012V4.61012Z"
+                                          stroke="var(--wish-list-icon-fill, black)" stroke-width="1.5"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round" fill="var(--wish-list-icon-fill, #fff)"/>
+                                </svg>
+                            </button>
+                            <form method="post" action="{{ routes.cart_add_url }}" class="bs-product_form">
+                                <input type="hidden" name="id"
+                                       value="{{ product.selected_or_first_available_variant.id }}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="submit" class="bs-product_btn-icon add-to-card">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15.58 11.9999C15.58 13.9799 13.98 15.5799 12 15.5799C10.02 15.5799 8.42001 13.9799 8.42001 11.9999C8.42001 10.0199 10.02 8.41992 12 8.41992C13.98 8.41992 15.58 10.0199 15.58 11.9999Z"
+                                              stroke="black" stroke-width="1.5" stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                        <path d="M12 20.27C15.53 20.27 18.82 18.19 21.11 14.59C22.01 13.18 22.01 10.81 21.11 9.39997C18.82 5.79997 15.53 3.71997 12 3.71997C8.47 3.71997 5.18 5.79997 2.89 9.39997C1.99 10.81 1.99 13.18 2.89 14.59C5.18 18.19 8.47 20.27 12 20.27Z"
+                                              stroke="black" stroke-width="1.5" stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+
+                        <a href="{{ product.url }}" class="bs-product_image">
+                            <picture>
+                                <source media="(min-width: 768px)"
+                                        srcset="{{ product.featured_image | img_url: '400x400' }} 1x,
+                                                {{ product.featured_image | img_url: '800x800' }} 2x">
+                                <source srcset="{{ product.featured_image | img_url: '300x300' }} 1x,
+                                                {{ product.featured_image | img_url: '600x600' }} 2x">
+                                <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title }}"
+                                     loading="lazy" width="400" height="400">
+                            </picture>
+                        </a>
+
+                        <div class="bs-product_info">
+                            <a href="{{ product.url }}" class="bs-product_title">{{ product.title }}</a>
+                            <span class="bs-product_price {% if product.compare_at_price != blank %}promo{% endif %}">
+                              {{ product.price | money }} {% if product.compare_at_price != blank %}
+                                    <span>{{ product.compare_at_price | money }}</span>{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-  {% endif %}
-{% endfor %}
+</div>
+
+<style>
+  .best-sellers-section {
+    background-color: #fff;
+    padding: {{ section_data.section_padding }};
+  }
+
+  .bs-section_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    gap: 16px;
+  }
+
+  .bs-section_content {
+    padding: 0 60px;
+  }
+
+  .bs-section_label {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #535353;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .bs-section_title {
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 121%;
+    color: #000;
+    margin-bottom: 64px;
+  }
+
+  .bs-section_title h2 {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+  }
+
+  .bs-tab_item {
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 121%;
+    color: #9d9d9d;
+    cursor: pointer;
+    border-bottom: 1px solid #dcdcdc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all ease .3s;
+    padding: 24px;
+  }
+
+  .bs-tab_item.active, .bs-tab_item:hover {
+    color: #000;
+    border-color: #292929;
+  }
+
+  .bs-tabs_content {
+    border-radius: 16px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .125);
+    align-self: stretch;
+    min-height: calc(816 / 1920 * 100 * 1vw);
+  }
+
+  .bs-tab_content {
+    background-color: #f5f5f5;
+    border-radius: 16px;
+    display: none;
+    position: relative;
+  }
+
+  .bs-tab_content.active {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .bs-product_tags {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
+  }
+
+  .bs-product_tag {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 129%;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+
+  .bs-product_tag.sale {
+    color: #fff;
+    background-color: #e41616;
+  }
+
+  .bs-product_btns {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  }
+
+  .bs-product_btn-icon {
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all ease .3s;
+    padding: 12px;
+  }
+
+  .bs-product_btn-icon:hover {
+    scale: 1.1;
+  }
+
+  .bs-product_btn-icon.wish-list.checked {
+    --wish-list-icon-fill: coral;
+  }
+
+  .bs-product_btn-icon.add-to-card:active {
+    background-color: #f5f5f5;
+  }
+
+  .bs-product_image {
+    width: 100%;
+  }
+
+  .bs-product_image img {
+    border-radius: 16px;
+    width: 100%;
+    height: auto;
+  }
+
+  .bs-product_info {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .125);
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 32px;
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1;
+  }
+
+  .bs-product_title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 150%;
+    color: #000;
+  }
+
+  .bs-product_price {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 150%;
+    color: #000;
+    display: inline-block;
+  }
+
+  .bs-product_price.promo {
+    color: #e41616;
+  }
+
+  .bs-product_price span {
+    text-decoration: line-through;
+    color: #9d9d9d;
+    display: inline-block;
+    margin-left: 8px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.bs-tab_item');
+    const contents = document.querySelectorAll('.bs-tab_content');
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        contents[index].classList.add('active');
+      });
+    });
+
+    const wishList = () => {
+      const buttons = document.querySelectorAll('.wish-list');
+
+      if (!localStorage.getItem('wishList')) {
+        localStorage.setItem('wishList', JSON.stringify([]))
+      }
+
+      buttons.forEach(button => {
+
+        localStorage.getItem('wishList') && JSON.parse(localStorage.getItem('wishList')).includes(button.dataset.productId) && button.classList.add('checked');
+
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          button.classList.toggle('checked');
+
+          console.log(localStorage.getItem('wishList'))
+          const wishList = JSON.parse(localStorage.getItem('wishList'));
+          const productId = button.dataset.productId;
+
+          wishList.includes(productId) ? wishList.splice(wishList.indexOf(productId), 1) : wishList.push(productId);
+          localStorage.setItem('wishList', JSON.stringify(wishList));
+
+        });
+      });
+    }
+
+    wishList();
+
+    document.querySelectorAll('.bs-product_form').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const button = form.querySelector('.add-to-card');
+        if (!button || button.disabled) return;
+
+        button.disabled = true;
+        button.style.opacity = '0.5';
+
+        try {
+          const addResponse = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {'Accept': 'application/javascript'},
+            body: new FormData(form),
+          });
+
+          if (!addResponse.ok) {
+            const err = await addResponse.json();
+            console.error('[Best Sellers] Add to cart error:', err.message || err);
+            return;
+          }
+
+          const cartResponse = await fetch('/cart.js');
+          const cart = await cartResponse.json();
+
+          document.dispatchEvent(new CustomEvent('cart:update', {
+            bubbles: true,
+            detail: {
+              resource: cart,
+              sourceId: 'best-sellers-section',
+              data: {
+                itemCount: cart.item_count,
+              },
+            },
+          }));
+
+        } catch (err) {
+          console.error('[Best Sellers] Failed to add to cart:', err);
+        } finally {
+          button.disabled = false;
+          button.style.opacity = '';
+        }
+      });
+    });
+
+  });
+</script>
 
 {% schema %}
 
@@ -49,6 +422,12 @@
       "id": "section_title",
       "label": "Section Title",
       "default": "Trending Products"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "default": "60px 0"
     }
   ],
   "blocks": [
