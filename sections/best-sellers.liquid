@@ -16,7 +16,13 @@
       </h2>
 
 
+      {% if featured_product and collection.products contains featured_product %}
 
+        {% render 'product-card', product: featured_product %}
+      {% elsif collection.products.size > 0 %}
+
+        {% render 'product-card', product: collection.products.first %}
+      {% endif %}
     </div>
   {% endif %}
 {% endfor %}
@@ -69,7 +75,21 @@
       ]
     }
   ],
-  "max_blocks": 3
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Best Sellers",
+      "category": "Collections",
+      "settings": {
+        "title": "Best Sellers Section"
+      },
+      "blocks": [
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
 }
 
 {% endschema %}
