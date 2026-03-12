@@ -1,0 +1,75 @@
+
+{% for block in section.blocks %}
+  {% if block.type == 'collection' %}
+    {% assign collection = block.settings.collection %}
+    {% assign custom_title = block.settings.collection_title %}
+    {% assign featured_product = block.settings.featured_product %}
+
+    <div class="collection-block">
+
+      <h2>
+        {% if custom_title != blank %}
+          {{ custom_title }}
+        {% else %}
+          {{ collection.title }}
+        {% endif %}
+      </h2>
+
+
+
+    </div>
+  {% endif %}
+{% endfor %}
+
+{% schema %}
+
+{
+  "name": "Best Sellers",
+  "tag": "section",
+  "class": "best-sellers-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Section Label",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Trending Products"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "collection_title",
+          "label": "Collection Title",
+          "placeholder": "Leave empty to use default collection name"
+        },
+        {
+          "type": "product",
+          "id": "featured_product",
+          "label": "Featured Product (Optional)"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3
+}
+
+{% endschema %}
