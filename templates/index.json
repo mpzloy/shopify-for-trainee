@@ -90,6 +90,46 @@
         "padding-block-end": 72
       }
     },
+    "best_sellers_NA7Fhe": {
+      "type": "best-sellers",
+      "blocks": {
+        "collection_PwPC6A": {
+          "type": "collection",
+          "settings": {
+            "collection": "bikes",
+            "collection_title": "City bikes",
+            "featured_product": "the-alfa"
+          }
+        },
+        "collection_n9KBBB": {
+          "type": "collection",
+          "settings": {
+            "collection": "tools",
+            "collection_title": "",
+            "featured_product": ""
+          }
+        },
+        "collection_FCkT6i": {
+          "type": "collection",
+          "settings": {
+            "collection": "spare-parts",
+            "collection_title": "",
+            "featured_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_PwPC6A",
+        "collection_n9KBBB",
+        "collection_FCkT6i"
+      ],
+      "name": "Best Sellers",
+      "settings": {
+        "section_label": "Best Sellers",
+        "section_title": "Trending Products",
+        "section_padding": "60px 0"
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -287,6 +327,7 @@
   },
   "order": [
     "hero_jVaWmY",
+    "best_sellers_NA7Fhe",
     "product_list_fa6P9H"
   ]
 }
