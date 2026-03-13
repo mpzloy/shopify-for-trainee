@@ -327,10 +327,10 @@
     "best_sellers_x7JGLc": {
       "type": "best-sellers",
       "blocks": {
-        "collection_ndyCVi": {
+        "collection_Yp9hJV": {
           "type": "collection",
           "settings": {
-            "collection": "other",
+            "collection": "some-collection",
             "collection_title": "",
             "featured_product": ""
           }
@@ -353,7 +353,7 @@
         }
       },
       "block_order": [
-        "collection_ndyCVi",
+        "collection_Yp9hJV",
         "collection_EB7CcG",
         "collection_kC3NMV"
       ],
