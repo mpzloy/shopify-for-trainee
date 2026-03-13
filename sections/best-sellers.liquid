@@ -46,13 +46,13 @@
                     <div class="bs-product bs-tab_content {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
                         {% assign product = collection.products.first %}
 
-                        {% if featured_product != blank and collection.products contains featured_product %}
+                        {% if featured_product != blank %}
                             {% assign product = featured_product %}
                         {% endif %}
 
                         {% if product.tags.size > 0 %}
                             <div class="bs-product_tags">
-                                {% for tag in product.tags limit: 6 %}
+                                {% for tag in product.tags limit: 3 %}
                                     <span class="bs-product_tag {% if tag == "Sale" %}sale{% endif %}">{{ tag }}</span>
                                 {% endfor %}
                             </div>
@@ -89,15 +89,20 @@
                         </div>
 
                         <a href="{{ product.url }}" class="bs-product_image">
-                            <picture>
-                                <source media="(min-width: 768px)"
-                                        srcset="{{ product.featured_image | img_url: '400x400' }} 1x,
+                            {% if product.featured_image %}
+                                <picture>
+                                    <source media="(min-width: 768px)"
+                                            srcset="{{ product.featured_image | img_url: '400x400' }} 1x,
                                                 {{ product.featured_image | img_url: '800x800' }} 2x">
-                                <source srcset="{{ product.featured_image | img_url: '300x300' }} 1x,
+                                    <source srcset="{{ product.featured_image | img_url: '300x300' }} 1x,
                                                 {{ product.featured_image | img_url: '600x600' }} 2x">
-                                <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title }}"
-                                     loading="lazy" width="400" height="400">
-                            </picture>
+                                    <img src="{{ product.featured_image | img_url: '400x400' }}"
+                                         alt="{{ product.title }}"
+                                         loading="lazy" width="400" height="400">
+                                </picture>
+                            {% else %}
+                                {{ 'collection-1' | placeholder_svg_tag }}
+                            {% endif %}
                         </a>
 
                         <div class="bs-product_info">
@@ -455,10 +460,10 @@
 </style>
 
 <script>
-  //todo test wrong custom product for collection
+
   document.addEventListener('DOMContentLoaded', () => {
 
-    const bestSellerSections = document.querySelectorAll('.best-sellers-section')
+    const bestSellerSections = document.querySelectorAll('.best-sellers-section:not([data-bs-initialized])');
 
     if (!bestSellerSections.length) return;
 
@@ -498,11 +503,14 @@
       popupOverlay.insertAdjacentHTML('beforeend', popupTemplate);
     }
 
-    document.body.addEventListener('click', (e) => {
-      if (e.target.hasAttribute('data-wish-list-close')) {
-        document.body.classList.remove('wish-list-popup-open')
-      }
-    });
+    if (!document.body.hasAttribute('data-bs-close-listener')) {
+      document.body.setAttribute('data-bs-close-listener', 'true');
+      document.body.addEventListener('click', (e) => {
+        if (e.target.hasAttribute('data-wish-list-close')) {
+          document.body.classList.remove('wish-list-popup-open');
+        }
+      });
+    }
 
     const wishList = (section) => {
       const buttons = section.querySelectorAll('.wish-list');
@@ -511,13 +519,20 @@
         localStorage.setItem('wishList', JSON.stringify([]))
       }
 
+      const updateClass = (id) => {
+        document.querySelectorAll('.wish-list').forEach(button => {
+          if (button.dataset.productId === id) {
+            button.classList.toggle('checked');
+          }
+        })
+      }
+
       buttons.forEach(button => {
 
         localStorage.getItem('wishList') && JSON.parse(localStorage.getItem('wishList')).includes(button.dataset.productId) && button.classList.add('checked');
 
         button.addEventListener('click', (e) => {
           e.preventDefault();
-          button.classList.toggle('checked');
 
           const wishList = JSON.parse(localStorage.getItem('wishList'));
           const productId = button.dataset.productId;
@@ -529,6 +544,7 @@
 
             popup(button.dataset.productName)
           }
+          updateClass(button.dataset.productId);
 
           localStorage.setItem('wishList', JSON.stringify(wishList));
         });
@@ -536,11 +552,14 @@
     }
 
     bestSellerSections.forEach(section => {
+      section.setAttribute('data-bs-initialized', 'true');
       tabs(section)
       wishList(section);
     })
 
-    document.querySelectorAll('.bs-product_form').forEach(form => {
+    document.querySelectorAll('.bs-product_form:not([data-bs-initialized])').forEach(form => {
+      form.setAttribute('data-bs-initialized', 'true');
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
