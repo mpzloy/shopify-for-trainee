@@ -90,46 +90,6 @@
         "padding-block-end": 72
       }
     },
-    "best_sellers_8GXV3X": {
-      "type": "best-sellers",
-      "blocks": {
-        "collection_PHLqdH": {
-          "type": "collection",
-          "settings": {
-            "collection": "tools",
-            "collection_title": "",
-            "featured_product": "4mm-5mm-6mm-balldriver-y-wrench"
-          }
-        },
-        "collection_paXa7G": {
-          "type": "collection",
-          "settings": {
-            "collection": "bikes",
-            "collection_title": "Best Bikes",
-            "featured_product": "the-alfa"
-          }
-        },
-        "collection_kH8Wdb": {
-          "type": "collection",
-          "settings": {
-            "collection": "bicycle-seat",
-            "collection_title": "",
-            "featured_product": ""
-          }
-        }
-      },
-      "block_order": [
-        "collection_PHLqdH",
-        "collection_paXa7G",
-        "collection_kH8Wdb"
-      ],
-      "name": "Best Sellers",
-      "settings": {
-        "section_label": "Best Sellers",
-        "section_title": "Trending Products",
-        "section_padding": "64px 0"
-      }
-    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -327,7 +287,6 @@
   },
   "order": [
     "hero_jVaWmY",
-    "best_sellers_8GXV3X",
     "product_list_fa6P9H"
   ]
 }
