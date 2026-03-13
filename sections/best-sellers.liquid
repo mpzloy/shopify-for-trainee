@@ -1,7 +1,7 @@
 {% assign section_data = section.settings %}
-{% assign section_data = section.id %}
+{% assign section_id = section.id %}
 
-<div class="section" id="{{ section.id }}">
+<div class="section" id="{{ section_id }}">
     <div class="bs-section_container">
         <div class="bs-section_content">
             <span class="bs-section_label">{{ section_data.section_label }}</span>
@@ -60,7 +60,7 @@
 
                         <div class="bs-product_btns">
                             <button type="button" class="bs-product_btn-icon wish-list"
-                                    data-product-id="{{ product.id }}">
+                                    data-product-id="{{ product.id }}" data-product-name="{{ product.title }}">
                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20.84 4.61012C20.3292 4.09912 19.7228 3.69376 19.0554 3.4172C18.3879 3.14064 17.6725 2.99829 16.95 2.99829C16.2275 2.99829 15.5121 3.14064 14.8446 3.4172C14.1772 3.69376 13.5708 4.09912 13.06 4.61012L12 5.67012L10.94 4.61012C9.90831 3.57842 8.50903 2.99883 7.05 2.99883C5.59096 2.99883 4.19169 3.57842 3.16 4.61012C2.1283 5.64181 1.54871 7.04108 1.54871 8.50012C1.54871 9.95915 2.1283 11.3584 3.16 12.3901L4.22 13.4501L12 21.2301L19.78 13.4501L20.84 12.3901C21.351 11.8794 21.7564 11.2729 22.0329 10.6055C22.3095 9.93801 22.4518 9.2226 22.4518 8.50012C22.4518 7.77763 22.3095 7.06222 22.0329 6.39476C21.7564 5.7273 21.351 5.12087 20.84 4.61012V4.61012Z"
@@ -115,6 +115,15 @@
 </div>
 
 <style>
+  body.wish-list-popup-open {
+    overflow: hidden;
+  }
+
+  body.wish-list-popup-open .wish-list-popup-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
   .best-sellers-section {
     background-color: #fff;
     padding: {{ section_data.section_padding }};
@@ -178,11 +187,10 @@
     border-radius: 16px;
     box-shadow: 0 0 2px rgba(0, 0, 0, .125);
     align-self: stretch;
-    min-height: calc(816 / 1920 * 100 * 1vw);
+    min-height: 816px;
   }
 
   .bs-tab_content {
-    background-color: #f5f5f5;
     border-radius: 16px;
     display: none;
     position: relative;
@@ -242,7 +250,6 @@
     align-items: center;
     justify-content: center;
     transition: all ease .3s;
-    padding: 12px;
   }
 
   .bs-product_btn-icon:hover {
@@ -273,6 +280,7 @@
     box-shadow: 0 0 2px rgba(0, 0, 0, .125);
     display: flex;
     justify-content: space-between;
+    gap: 8px;
     padding: 24px 32px;
     position: absolute;
     left: 16px;
@@ -306,25 +314,198 @@
     display: inline-block;
     margin-left: 8px;
   }
+
+  .wish-list-popup-overlay {
+    background-color: rgba(0, 0, 0, .5);
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all ease .3s;
+    padding: 16px;
+    margin: auto;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+  }
+
+  .wish-list-popup {
+    background-color: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 460px;
+    min-height: 120px;
+    padding: 24px 16px 24px;
+    position: relative;
+  }
+
+  .wish-list-popup-header {
+    display: flex;
+  }
+
+  .wish-list-popup-header button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    position: relative;
+  }
+
+  .wish-list-popup-header button::before,
+  .wish-list-popup-header button::after {
+    content: '';
+    background-color: #000;
+    width: 2px;
+    height: 20px;
+    position: absolute;
+    top: -2px;
+    right: 7px;
+  }
+
+  .wish-list-popup-header button:before {
+    transform: rotate(45deg);
+  }
+
+  .wish-list-popup-header button:after {
+    transform: rotate(-45deg);
+  }
+
+  .wish-list-popup-content {
+    font-size: 18px;
+    line-height: 120%;
+    margin-top: 8px;
+  }
+
+  @media screen and (max-width: 1920px) {
+    .bs-tabs_content {
+      min-height: calc(816 / 1920 * 100 * 1vw);
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .best-sellers-section {
+      padding: 32px 0;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .bs-section_container {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .bs-section_content {
+      padding: unset;
+    }
+
+    .bs-section_title {
+      margin-bottom: 24px;
+    }
+
+    .bs-tab_item {
+      font-size: 22px;
+      padding: 24px 0;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .bs-section_title {
+      font-size: 28px;
+    }
+
+    .bs-tabs_content {
+      min-height: 343px;
+    }
+
+    .bs-product_tags {
+      top: 8px;
+      left: 8px;
+    }
+
+    .bs-product_btns {
+      gap: 4px;
+      top: 8px;
+      right: 8px;
+    }
+
+    .bs-product_btn-icon {
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .bs-product_btn-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .bs-product_info {
+      flex-direction: column;
+      padding: 12px 16px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+    }
+  }
 </style>
 
 <script>
+  //todo test wrong custom product for collection
   document.addEventListener('DOMContentLoaded', () => {
-    const tabs = document.querySelectorAll('.bs-tab_item');
-    const contents = document.querySelectorAll('.bs-tab_content');
 
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
+    const bestSellerSections = document.querySelectorAll('.best-sellers-section')
 
-        tab.classList.add('active');
-        contents[index].classList.add('active');
+    if (!bestSellerSections.length) return;
+
+    const tabs = (section) => {
+      const tabsItem = section.querySelectorAll('.bs-tab_item');
+      const tabsContents = section.querySelectorAll('.bs-tab_content');
+
+      tabsItem.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          tabsItem.forEach(t => t.classList.remove('active'));
+          tabsContents.forEach(c => c.classList.remove('active'));
+
+          tab.classList.add('active');
+          tabsContents[index].classList.add('active');
+        });
       });
+    }
+
+    const popup = (data) => {
+      const popupOverlay = document.createElement('div');
+      popupOverlay.className = 'wish-list-popup-overlay';
+      popupOverlay.setAttribute('data-wish-list-close', true);
+
+      const popupTemplate = `
+        <div class="wish-list-popup">
+            <div class="wish-list-popup-header"><button data-wish-list-close></button></div>
+            <p class="wish-list-popup-content"><strong>${data}</strong> has been added to your wish list!</p>
+        </div>
+      `
+
+      if (!document.querySelector('.wish-list-popup-overlay')) {
+        document.body.insertAdjacentElement('beforeend', popupOverlay);
+      }
+
+      document.body.classList.add('wish-list-popup-open')
+      popupOverlay.innerHTML = '';
+      popupOverlay.insertAdjacentHTML('beforeend', popupTemplate);
+    }
+
+    document.body.addEventListener('click', (e) => {
+      if (e.target.hasAttribute('data-wish-list-close')) {
+        document.body.classList.remove('wish-list-popup-open')
+      }
     });
 
-    const wishList = () => {
-      const buttons = document.querySelectorAll('.wish-list');
+    const wishList = (section) => {
+      const buttons = section.querySelectorAll('.wish-list');
 
       if (!localStorage.getItem('wishList')) {
         localStorage.setItem('wishList', JSON.stringify([]))
@@ -338,18 +519,26 @@
           e.preventDefault();
           button.classList.toggle('checked');
 
-          console.log(localStorage.getItem('wishList'))
           const wishList = JSON.parse(localStorage.getItem('wishList'));
           const productId = button.dataset.productId;
 
-          wishList.includes(productId) ? wishList.splice(wishList.indexOf(productId), 1) : wishList.push(productId);
-          localStorage.setItem('wishList', JSON.stringify(wishList));
+          if (wishList.includes(productId)) {
+            wishList.splice(wishList.indexOf(productId), 1)
+          } else {
+            wishList.push(productId)
 
+            popup(button.dataset.productName)
+          }
+
+          localStorage.setItem('wishList', JSON.stringify(wishList));
         });
       });
     }
 
-    wishList();
+    bestSellerSections.forEach(section => {
+      tabs(section)
+      wishList(section);
+    })
 
     document.querySelectorAll('.bs-product_form').forEach(form => {
       form.addEventListener('submit', async (e) => {
