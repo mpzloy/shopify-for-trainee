@@ -323,11 +323,43 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "best_sellers_x7JGLc": {
+      "type": "best-sellers",
+      "blocks": {
+        "collection_EB7CcG": {
+          "type": "collection",
+          "settings": {
+            "collection": "bicycle-seat",
+            "collection_title": "",
+            "featured_product": ""
+          }
+        },
+        "collection_kC3NMV": {
+          "type": "collection",
+          "settings": {
+            "collection": "tools",
+            "collection_title": "",
+            "featured_product": "700c-aerospoke"
+          }
+        }
+      },
+      "block_order": [
+        "collection_EB7CcG",
+        "collection_kC3NMV"
+      ],
+      "name": "Best Sellers",
+      "settings": {
+        "section_label": "Other Best Sellers",
+        "section_title": "Sale Products",
+        "section_padding": "60px 0"
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "best_sellers_NA7Fhe",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "best_sellers_x7JGLc"
   ]
 }
